@@ -14,6 +14,17 @@ dist-ssr/
 .DS_Store
 Thumbs.db
 
+# Local agent/editor configuration for this checkout. Holds a dev-server launch
+# description and per-machine settings; nothing the application builds or runs
+# reads it.
+.claude/
+
+# Throwaway development helpers: one-off scripts that rewrite source files by
+# string replacement. Kept narrow on purpose — only dot-prefixed `patch*.py`
+# files under src-tauri/ match, so real scripts such as `make_icons.py` and
+# every application source file are unaffected.
+src-tauri/.patch*.py
+
 # Logs
 *.log
 logs/
