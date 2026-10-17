@@ -8,9 +8,9 @@
 [![Tauri](https://img.shields.io/badge/Tauri-2-FFC131?logo=tauri&logoColor=black)](https://tauri.app/)
 [![Rust](https://img.shields.io/badge/backend-Rust-dea584?logo=rust&logoColor=black)](https://www.rust-lang.org/)
 [![React](https://img.shields.io/badge/frontend-React%20%2B%20TypeScript-3178C6?logo=typescript&logoColor=white)](https://react.dev/)
-[![License](https://img.shields.io/badge/license-not%20yet%20selected-lightgrey)](#license)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[Features](#features) · [Installation](#installation) · [Build from source](#build-from-source) · [Troubleshooting](#troubleshooting) · [Responsible use](#responsible-use)
+[Features](#features) · [Screenshots](#screenshots) · [Installation](#installation) · [Build from source](#build-from-source) · [Troubleshooting](#troubleshooting) · [Changelog](CHANGELOG.md) · [Design notes](idea/README.md) · [License](LICENSE)
 
 </div>
 
@@ -22,7 +22,7 @@ Douyin Downloader is a native-feeling Windows desktop application built with **T
 
 The app keeps its library, download history, settings, and downloaded files on your computer. Resolving Douyin pages and downloading media still requires network requests to Douyin and its media hosts. Optional browser-assisted profile loading uses a browser profile managed separately by the app.
 
-> **Current release status:** No public installer has been published to GitHub Releases yet. Check [Releases](https://github.com/VietAIMEM/douyin-media-downloader/releases) for future release packages.
+> **Release status:** [v1.0.1](https://github.com/VietAIMEM/douyin-media-downloader/releases/tag/v1.0.1) is the first public release — a per-user NSIS installer for Windows x64. See the [Releases page](https://github.com/VietAIMEM/douyin-media-downloader/releases) for downloads and [CHANGELOG.md](CHANGELOG.md) for what each version contains. The installer is not code-signed, so SmartScreen may warn on first run.
 
 ## Features
 
@@ -39,9 +39,43 @@ The app keeps its library, download history, settings, and downloaded files on y
 
 The media available for a post depends on what Douyin makes accessible. Supported content can include videos, images, image carousels, and audio resources. Separate video and audio streams may need FFmpeg to be combined into a playable file.
 
+## Screenshots
+
+**Profile Downloader** — load a creator's publicly accessible posts and select across pages.
+
+![Profile Downloader](img/profiledownloader.png)
+
+**Single URL** — analyse one post and choose which of its media to download.
+
+![Single URL](img/singleurldownload.png)
+
+**Library** — search, filter and browse everything the application has discovered.
+
+![Library](img/Library.png)
+
+**Download Folder** — what is actually on disk, read by folder.
+
+![Download Folder](img/downloadfolder.png)
+
+The screenshots show the dark theme and English interface. In the Download Folder view the local path and the thumbnails are blacked out.
+
 ## Installation
 
-There is **currently no public installer attached to this repository**. When a release is published, download the installer from the project's [GitHub Releases page](https://github.com/VietAIMEM/douyin-media-downloader/releases), rather than from an unofficial mirror.
+Download the installer from the project's [GitHub Releases page](https://github.com/VietAIMEM/douyin-media-downloader/releases), rather than from an unofficial mirror.
+
+1. Download `Douyin Downloader_1.0.1_x64-setup.exe` from [v1.0.1](https://github.com/VietAIMEM/douyin-media-downloader/releases/tag/v1.0.1).
+2. Run it. The installer is **per-user** — it installs for the current account only and normally does not require administrator elevation.
+
+The installer is **not code-signed**, so Windows will not show a publisher name and SmartScreen may warn on first run. Verify the download before running it:
+
+| | |
+| --- | --- |
+| Size | 3 377 301 bytes |
+| SHA-256 | `114a762f4d30c27da2f48592ee0aebb4552590d96d0e13f2a532d864d89b0bb2` |
+
+```powershell
+Get-FileHash ".\Douyin Downloader_1.0.1_x64-setup.exe" -Algorithm SHA256
+```
 
 When building from source on Windows, the project can produce these installer formats:
 
@@ -138,6 +172,7 @@ Confirm that the MSVC C++ build tools, Windows SDK, Rust MSVC toolchain, Node.js
 - **Local library:** Library records, history, settings, and downloaded files are stored on the local machine.
 - **Network activity:** Loading posts and downloading media requires requests to Douyin and relevant media hosts.
 - **Browser-assisted features:** If enabled and used, browser-based resolution or a profile session may open an app-managed browser context. Review the settings before enabling these options.
+- **Opening the Profile Downloader checks login state.** The page runs a sign-in status check as soon as it loads. If Chrome or Edge is installed, that check starts the application's own browser profile and loads Douyin's home page to ask whether it recognises a signed-in session — so visiting the page can cause browser activity even if you never press a button. It is not gated by the "Use login session when loading profiles" setting, which controls only whether *profile loads* use the session.
 - **No promise of universal availability:** The application cannot guarantee that a URL, profile, media variant, or source host will remain accessible.
 
 Do not share your application data directory, browser profile, logs, or database publicly without reviewing them for personal information first.
@@ -154,9 +189,18 @@ Bug reports should include the application version, Windows version, steps to re
 
 Please do not include account credentials, cookies, browser profiles, private databases, or downloaded media in an issue report.
 
+## Further reading
+
+- **[CHANGELOG.md](CHANGELOG.md)** — what each released version contains.
+- **[idea/README.md](idea/README.md)** — the design behind the application: the problem it solves, its two workflows, and the intended architecture, with design intent distinguished from what is actually implemented.
+- **[code/ARCHITECTURE.md](code/ARCHITECTURE.md)** — the delivered layering, and the boundaries between layers.
+- **[code/docs/USER_GUIDE.md](code/docs/USER_GUIDE.md)** — how to use the application.
+
 ## License
 
-**No license has been selected for this repository yet.** There is currently no `LICENSE` file. Until a license is added, this project should not be assumed to grant permission to use, modify, or redistribute the source code.
+Released under the [MIT License](LICENSE).
+
+Copyright (c) 2026 VietAIMEM.
 
 ---
 
