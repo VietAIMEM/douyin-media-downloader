@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Content Security Policy. This file is the only place the policy is
+      declared — `tauri.conf.json` sets `csp: null`, so nothing overrides or
+      duplicates this.
+
+      `script-src` carries a hash for the one inline script below. The hash is
+      over the script's text exactly as the HTML tokenizer produces it, which
+      means it is *not* sensitive to the file's line endings (CRLF is normalised
+      to LF before hashing) but *is* sensitive to every other byte: whitespace,
+      indentation and comments inside the script element all count.
+
+      If that script is ever edited, this hash must be recomputed. `src/test/
+      csp.test.ts` recomputes it and fails with the value to paste in, so the
+      breakage is a failing test rather than a silently blocked script. Adding
+      a second inline script needs a second hash here.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' asset: http://asset.localhost https: data:; media-src 'self' asset: http://asset.localhost; script-src 'self' 'sha256-PDM10YqrPaxOJYCZOHilB/O6Q8ijcR6OED6qyB3Yc3c='; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost"
+    />
+    <title>Douyin Downloader</title>
+    <script>
+      /*
+       * Paint the theme before the first frame.
+       *
+       * The stored theme lives in SQLite and is only readable once the backend
+       * answers, so boot with the `system` default — the value the settings
+       * service ships with — and let useTheme correct it once settings load.
+       * Without this, a light-mode user sees a dark flash on every launch.
+       */
+      (function () {
+        try {
+          var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          document.documentElement.classList.toggle("dark", !prefersLight);
+        } catch (_) {
+          /* Keep the dark default from the <html> tag. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

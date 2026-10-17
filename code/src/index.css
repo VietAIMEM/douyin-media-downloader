@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme palette.
+ *
+ * `:root` is the light theme and `.dark` overrides it; `useTheme` keeps the
+ * `dark` class on <html> in sync with the stored setting. Values are bare
+ * space-separated RGB channels so Tailwind's `rgb(var(--x) / <alpha-value>)`
+ * token form can apply opacity modifiers.
+ *
+ * Two deliberately different surfaces: `shell` is the navigation chrome (the
+ * sidebar, the top bar) and `surface` is the workspace. A desktop application
+ * reads as an application — not a web page — when its chrome is a step darker
+ * than the paper it lays content on, in both themes.
+ */
+:root {
+  --color-shell: 241 243 247;
+  --color-shell-raised: 255 255 255;
+  --color-shell-border: 225 229 237;
+
+  --color-surface: 250 251 253;
+  --color-surface-raised: 255 255 255;
+  --color-surface-overlay: 240 242 246;
+  --color-surface-border: 224 228 236;
+
+  --color-brand: 79 70 229;
+  --color-brand-hover: 67 56 202;
+  --color-brand-subtle: 228 227 255;
+
+  --color-accent: 124 58 237;
+  --color-accent-subtle: 237 233 254;
+
+  /* Semantic states. Both themes state them; components never branch. */
+  --color-success: 5 150 105;
+  --color-success-subtle: 209 250 229;
+  --color-warning: 202 138 4;
+  --color-warning-subtle: 254 243 199;
+  --color-danger: 220 38 38;
+  --color-danger-subtle: 254 226 226;
+
+  --color-content-primary: 24 27 35;
+  --color-content-secondary: 84 92 107;
+  --color-content-muted: 122 130 144;
+  --color-content-inverse: 255 255 255;
+
+  /* Navigation text lives on the shell, so it carries its own scale. */
+  --color-nav-primary: 24 27 35;
+  --color-nav-secondary: 96 105 122;
+  --color-nav-active: 67 56 202;
+  --color-nav-active-subtle: 228 227 255;
+}
+
+.dark {
+  --color-shell: 12 14 20;
+  --color-shell-raised: 20 23 32;
+  --color-shell-border: 36 41 54;
+
+  --color-surface: 18 21 29;
+  --color-surface-raised: 24 28 38;
+  --color-surface-overlay: 32 37 49;
+  --color-surface-border: 44 50 65;
+
+  --color-brand: 129 140 248;
+  --color-brand-hover: 165 180 252;
+  --color-brand-subtle: 49 46 129;
+
+  --color-accent: 167 139 250;
+  --color-accent-subtle: 59 45 110;
+
+  --color-success: 52 211 153;
+  --color-success-subtle: 6 58 46;
+  --color-warning: 251 191 36;
+  --color-warning-subtle: 69 46 6;
+  --color-danger: 248 113 113;
+  --color-danger-subtle: 69 10 10;
+
+  --color-content-primary: 233 236 243;
+  --color-content-secondary: 158 166 182;
+  --color-content-muted: 112 120 137;
+  --color-content-inverse: 255 255 255;
+
+  --color-nav-primary: 228 232 240;
+  --color-nav-secondary: 129 137 154;
+  --color-nav-active: 165 180 252;
+  --color-nav-active-subtle: 38 38 84;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-surface font-sans text-content-primary antialiased;
+    /* The window is a fixed-size desktop shell; only panes scroll. */
+    overflow: hidden;
+  }
+
+  /* Native controls should follow the theme too. */
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  ::selection {
+    @apply bg-brand/30;
+  }
+
+  /* Every focusable control states where the keyboard is, without each
+     component having to remember the classes. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-brand));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /* Slim scrollbars that do not fight the panel borders. */
+  .scroll-pane {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-surface-border)) transparent;
+  }
+
+  .scroll-pane::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scroll-pane::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--color-surface-border));
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+
+  /* An entrance that respects the person using it. Pair with motion-safe
+     prefixes on the elements that use it. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .animate-rise {
+    animation: rise 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rise {
+      animation: none;
+    }
+  }
+}

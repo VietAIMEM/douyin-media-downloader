@@ -1,0 +1,105 @@
+[package]
+name = "douyin-downloader"
+version = "1.0.1"
+description = "Desktop application for downloading publicly accessible Douyin media"
+authors = ["Douyin Downloader"]
+edition = "2021"
+rust-version = "1.77"
+
+# The library holds the entire application core so that it can be unit- and
+# integration-tested without spinning up a Tauri window. The binary is a thin
+# wrapper around `douyin_downloader_lib::run`.
+[lib]
+name = "douyin_downloader_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# --- Desktop shell ---------------------------------------------------------
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-opener = "2"
+# The native folder picker for the download destination. Tauri has no built-in
+# dialog surface, and a text field is not a way to choose a folder — the user
+# cannot see what exists or reach a path they cannot spell.
+tauri-plugin-dialog = "2"
+# In-app update checking, download and installation. Every artifact is verified
+# against a public key compiled into the application, so a package that is not
+# signed by the matching private key is refused rather than run.
+tauri-plugin-updater = "2"
+# Relaunching the application once an update has been installed.
+tauri-plugin-process = "2"
+
+# --- Serialization ---------------------------------------------------------
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# --- Errors ----------------------------------------------------------------
+thiserror = "2"
+
+# --- Async runtime ---------------------------------------------------------
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs", "io-util", "process"] }
+async-trait = "0.1"
+
+# --- Database --------------------------------------------------------------
+# `bundled` compiles SQLite from source so the app has no external runtime
+# dependency on a system SQLite library.
+rusqlite = { version = "0.32", features = ["bundled", "chrono", "serde_json"] }
+r2d2 = "0.8"
+r2d2_sqlite = "0.25"
+
+# --- Networking ------------------------------------------------------------
+reqwest = { version = "0.12", features = ["json"] }
+# Versioned through reqwest; used directly to build synthetic responses in tests.
+http = "1"
+
+# --- Browser-assisted resolution -------------------------------------------
+# Used for exactly one thing: speaking the Chrome DevTools Protocol over a
+# WebSocket so a real browser can render a page the unsigned HTTP path cannot
+# satisfy. TLS is not needed (the endpoint is always loopback), so it is left
+# off to keep the tree small.
+tokio-tungstenite = { version = "0.24", default-features = false, features = ["connect", "handshake"] }
+# Drives the WebSocket above (`SinkExt`/`StreamExt`). Already present in the
+# dependency tree through reqwest, so this adds no new compilation.
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+
+# --- Observability ---------------------------------------------------------
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt", "ansi"] }
+tracing-appender = "0.2"
+
+# --- Utilities -------------------------------------------------------------
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+url = "2"
+directories = "5"
+parking_lot = "0.12"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1", features = ["full"] }
+# The `test` feature exposes `tauri::test`, which lets integration tests drive
+# real commands through the IPC bridge against a mock runtime — no window, but
+# the same serialization and error paths the app uses.
+tauri = { version = "2", features = ["test"] }
+# The verifier the updater plugin itself uses. A release test runs it over the
+# real artifacts, so "the release is signed" means the same code that an
+# installed copy would run says so — not that a signature file exists.
+minisign-verify = "0.3"
+# The plugin base64-decodes the key and the signature before parsing the minisign
+# text inside them, so a test that verified the text directly would be checking
+# something the updater never does.
+base64 = "0.22"
+
+[features]
+# Default Tauri feature set; kept explicit so `cargo test` uses the same core.
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

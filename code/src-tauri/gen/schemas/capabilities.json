@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Default capability set for the main application window.","local":true,"windows":["main"],"permissions":["core:default","opener:default","dialog:allow-open","updater:allow-check","updater:allow-download","updater:allow-install","process:allow-restart"]}}
