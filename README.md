@@ -1,129 +1,167 @@
+<div align="center">
+
 # Douyin Downloader
 
-Ứng dụng desktop cho Windows giúp tải nội dung Douyin được đăng công khai: dán
-một liên kết bài viết hoặc liên kết trang cá nhân, xem trước những gì có sẵn,
-rồi chọn phần mình muốn lưu.
+**A Windows desktop app to save publicly accessible Douyin media and organize it locally.**
 
-Ứng dụng được viết bằng **Tauri 2** (lõi Rust + giao diện React/TypeScript).
-Toàn bộ dữ liệu — cơ sở dữ liệu, lịch sử, tệp đã tải — nằm trên máy của bạn.
-Không có máy chủ trung gian nào nhận hay lưu dữ liệu của bạn.
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64-0078D4?logo=windows&logoColor=white)](https://www.microsoft.com/windows)
+[![Tauri](https://img.shields.io/badge/Tauri-2-FFC131?logo=tauri&logoColor=black)](https://tauri.app/)
+[![Rust](https://img.shields.io/badge/backend-Rust-dea584?logo=rust&logoColor=black)](https://www.rust-lang.org/)
+[![React](https://img.shields.io/badge/frontend-React%20%2B%20TypeScript-3178C6?logo=typescript&logoColor=white)](https://react.dev/)
+[![License](https://img.shields.io/badge/license-not%20yet%20selected-lightgrey)](#license)
 
-## Tính năng chính
+[Features](#features) · [Installation](#installation) · [Build from source](#build-from-source) · [Troubleshooting](#troubleshooting) · [Responsible use](#responsible-use)
 
-- **Tải từ một liên kết (Single URL).** Dán một liên kết bài viết Douyin; ứng
-  dụng phân tích và hiển thị trước nội dung (video, ảnh, bộ ảnh, hoặc bài chỉ có
-  chữ), rồi bạn chọn phiên bản muốn tải.
-- **Tải từ trang cá nhân (Profile Downloader).** Dán liên kết trang cá nhân,
-  duyệt danh sách bài viết công khai theo từng trang, lọc theo loại nội dung và
-  chọn nhiều bài để đưa vào hàng đợi cùng lúc.
-- **Hàng đợi tải xuống.** Theo dõi tiến độ, tốc độ và thời gian còn lại của từng
-  tác vụ. Có thể hủy, tạm dừng, tiếp tục và thử lại — những nút này chỉ xuất hiện
-  khi tác vụ thực sự hỗ trợ thao tác đó.
-- **Thư viện.** Tìm kiếm, lọc và duyệt mọi nội dung ứng dụng đã phát hiện hoặc đã
-  tải, kèm trạng thái của tệp trên đĩa. Thư viện phân biệt rõ ba trường hợp: tệp
-  còn đó, tệp đã mất, và tệp không thể kiểm tra được (ví dụ ổ đĩa chưa gắn).
-- **Lịch sử tải xuống.** Ghi lại mọi lượt tải đã kết thúc — kể cả lượt thất bại
-  hoặc đã hủy — cùng tệp mà lượt tải đó tạo ra.
-- **Cài đặt.** Chọn thư mục lưu, quy tắc đặt tên tệp và thư mục, cách sắp xếp
-  theo người sáng tạo hoặc theo loại nội dung, số lượt tải đồng thời, cùng các
-  tùy chọn nâng cao.
+</div>
 
-## Nền tảng được hỗ trợ
+---
 
-- **Windows x64.**
-- Đã kiểm thử trên Windows 11 với phiên bản **1.0.1**.
+## Overview
 
-## Cài đặt cho người dùng
+Douyin Downloader is a native-feeling Windows desktop application built with **Tauri 2, Rust, React, and TypeScript**. Paste a post URL or a profile URL, inspect the media the app can access, choose what to save, and manage your downloads from one place.
 
-**Hiện chưa có bản phát hành công khai.** Kho mã nguồn này chỉ chứa mã nguồn;
-chưa có GitHub Release và chưa có tệp cài đặt nào được đính kèm. Nếu sau này có
-bản phát hành, tệp cài đặt sẽ nằm ở mục **Releases** của kho này.
+The app keeps its library, download history, settings, and downloaded files on your computer. Resolving Douyin pages and downloading media still requires network requests to Douyin and its media hosts. Optional browser-assisted profile loading uses a browser profile managed separately by the app.
 
-Trong lúc chờ, bạn có thể tự tạo bộ cài từ mã nguồn — xem mục *Dành cho nhà phát
-triển* bên dưới. Quá trình build tạo ra hai loại bộ cài:
+> **Current release status:** No public installer has been published to GitHub Releases yet. Check [Releases](https://github.com/VietAIMEM/douyin-media-downloader/releases) for future release packages.
 
-| Bộ cài | Phạm vi | Ghi chú |
+## Features
+
+| Feature | What it does |
+| --- | --- |
+| **Single URL Downloader** | Paste a Douyin post link, inspect available media, preview supported items or variants, and select what to download. |
+| **Profile Downloader** | Browse publicly accessible posts from a profile, filter by media type, and select multiple posts for the download queue. |
+| **Download queue** | Track task status and progress, with speed and estimated time remaining when available. Task actions are shown only when supported. |
+| **Library** | Search, filter, and browse discovered media with thumbnails and file-presence information. |
+| **Download Folder** | Browse files directly from the selected download directory, including files that were placed there outside the app. |
+| **History** | Review completed, failed, and cancelled tasks and the files associated with them. |
+| **Flexible organization** | Configure the download location, filename rules, folder organization, and download concurrency. |
+| **Media preview** | Preview supported media before opening or managing the corresponding file. |
+
+The media available for a post depends on what Douyin makes accessible. Supported content can include videos, images, image carousels, and audio resources. Separate video and audio streams may need FFmpeg to be combined into a playable file.
+
+## Installation
+
+There is **currently no public installer attached to this repository**. When a release is published, download the installer from the project's [GitHub Releases page](https://github.com/VietAIMEM/douyin-media-downloader/releases), rather than from an unofficial mirror.
+
+When building from source on Windows, the project can produce these installer formats:
+
+| Package | Install scope | Notes |
 | --- | --- | --- |
-| **NSIS** (`*-setup.exe`) | Chỉ người dùng hiện tại | **Khuyến nghị.** Cài vào thư mục của riêng bạn, không cần quyền quản trị. |
-| **MSI** (`*.msi`) | Toàn máy | Cài cho mọi người dùng trên máy, nên Windows sẽ yêu cầu quyền quản trị. |
+| **NSIS** (`*-setup.exe`) | Current user | Recommended for a personal installation; normally does not require administrator elevation. |
+| **MSI** (`*.msi`) | Per machine | May require administrator privileges. |
 
-Bộ cài chỉ đặt tệp chương trình. Dữ liệu của bạn — cơ sở dữ liệu, lịch sử, cài
-đặt và các tệp đã tải — nằm ở thư mục dữ liệu riêng và **không** bị bộ cài xóa
-hay ghi đè khi cập nhật.
+## Build from source
 
-## Dành cho nhà phát triển
+### Requirements
 
-### Yêu cầu
+Use a **Windows x64** development environment with the following tools:
 
-| Thành phần | Phiên bản | Vì sao cần |
+| Tool | Requirement | Purpose |
 | --- | --- | --- |
-| Windows x64 | 11, hoặc Windows 10 còn được hỗ trợ | Nền tảng mục tiêu. |
-| WebView2 runtime | — | Có sẵn trên Windows 11. Trên Windows 10, bộ cài sẽ tự cài. |
-| Node.js | 24.x | Build phần giao diện. |
-| Rust | 1.77 trở lên | Lõi ứng dụng, toolchain `x86_64-pc-windows-msvc`. |
-| MSVC build tools | Visual Studio 2022 C++ | Trình liên kết cho lõi Rust. |
-| Windows SDK | 10/11 | Tauri cần cho WebView2 và Common Controls. |
-| FFmpeg | bản gần đây | **Tùy chọn.** Cần khi Douyin phục vụ video và âm thanh thành hai luồng riêng: ứng dụng tải cả hai rồi ghép lại thành một tệp MP4. Việc ghép là sao chép luồng (`-c copy`), không mã hóa lại. Nếu máy chưa có FFmpeg, những video như vậy sẽ báo lỗi nêu rõ tên FFmpeg thay vì lặng lẽ lưu tệp không có tiếng. |
-| Chrome hoặc Edge | — | **Khuyến nghị.** Một số trang Douyin chỉ đưa nội dung cho trình duyệt thật; ứng dụng dùng Chrome/Edge để đọc những trang đó. |
+| Windows | Windows 11 recommended | Target desktop platform. |
+| Node.js | 24.x | Frontend tooling and tests. |
+| Rust | 1.77 or newer, MSVC toolchain | Rust application core. |
+| Visual Studio Build Tools | Visual Studio 2022 C++ build tools | Native compilation and linking. |
+| Windows SDK | Windows 10/11 SDK | Windows and WebView2 build dependencies. |
+| WebView2 Runtime | Installed on the system | Hosts the Tauri UI. It is included with most Windows 11 installations. |
+| FFmpeg / FFprobe | Optional, recent build recommended | Needed for workflows that must combine separate video and audio streams; also useful for media inspection and thumbnails. |
+| Chrome or Edge | Recommended | Some Douyin pages may require browser-assisted rendering to expose accessible post information. |
 
-### Các lệnh
+### Clone and install dependencies
 
-```bash
-cd code
-npm install
-npm run tauri:dev      # chạy ứng dụng ở chế độ phát triển
-npm run tauri:build    # tạo bộ cài NSIS và MSI trong src-tauri/target/release/bundle/
+```powershell
+git clone https://github.com/VietAIMEM/douyin-media-downloader.git
+cd douyin-media-downloader\code
+npm ci
 ```
 
-### Kiểm tra chất lượng
+### Run the desktop app in development
 
-```bash
-cd code
-npm run typecheck      # kiểm tra kiểu TypeScript
-npm test               # bộ kiểm thử giao diện (Vitest)
-npm run build          # build giao diện cho môi trường thật
-cd src-tauri
-cargo test --all-targets
-cargo clippy --all-targets -- -D warnings
+```powershell
+npm run tauri:dev
 ```
 
-Một số kiểm thử trong `src-tauri/tests/live_*.rs` cố ý bị đánh dấu `#[ignore]`:
-chúng cần mạng thật và một trình duyệt đã cài, nên bộ kiểm thử mặc định không phụ
-thuộc vào việc Douyin có truy cập được hay không.
+### Build the Windows installers
 
-## Xử lý sự cố
+```powershell
+npm run tauri:build
+```
 
-**Tải video báo lỗi cần FFmpeg.** Douyin phục vụ hình và tiếng thành hai luồng
-riêng cho nhiều video. Ứng dụng cần FFmpeg để ghép chúng thành một tệp có tiếng.
-Hãy cài FFmpeg, hoặc trỏ ứng dụng tới tệp thực thi bằng biến môi trường
-`DOUYIN_DOWNLOADER_FFMPEG`.
+The build artifacts are generated under `src-tauri\target\release\bundle\`. The exact subdirectories and packages depend on the Windows build environment and Tauri configuration.
 
-**Không đọc được trang cá nhân.** Một số trang chỉ hiển thị bài viết cho người
-đã đăng nhập. Ứng dụng có phần đăng nhập riêng: nó mở một cửa sổ Douyin để bạn tự
-đăng nhập, và lưu phiên đó trong hồ sơ trình duyệt **riêng của ứng dụng** — không
-đụng tới trình duyệt hằng ngày của bạn. Việc dùng phiên đăng nhập là tùy chọn và
-mặc định tắt.
+### Run checks
 
-**Ứng dụng báo "cần trình duyệt".** Hãy cài Chrome hoặc Edge rồi mở lại ứng dụng.
+From the `code` directory:
 
-**Bấm Refresh không thấy tệp mới.** Nút *Check files* trong màn hình Tải xuống và
-Lịch sử sẽ đọc lại ổ đĩa; thao tác này tách biệt với việc đọc hàng đợi.
+```powershell
+npm run typecheck
+npm test
+npm run build
+cargo test --manifest-path src-tauri\Cargo.toml --all-targets
+cargo clippy --manifest-path src-tauri\Cargo.toml --all-targets -- -D warnings
+```
 
-## Lưu ý về sử dụng có trách nhiệm
+A small number of live integration tests are intentionally ignored by the default test run because they depend on external network access and/or a locally installed browser. Do not run those tests unless you intend to test against live services.
 
-Ứng dụng này chỉ dành cho **nội dung công khai**. Hãy chỉ tải những nội dung mà
-bạn được phép lưu lại, tôn trọng quyền của người sáng tạo và tuân thủ quy định
-của Douyin cũng như pháp luật áp dụng cho bạn.
+## Troubleshooting
 
-Ứng dụng không vượt qua kiểm soát truy cập, không truy cập nội dung riêng tư, và
-không có tính năng xóa watermark: khi nguồn có sẵn bản gốc sạch, ứng dụng sẽ ưu
-tiên bản đó, nhưng không chỉnh sửa nội dung để tạo ra nó.
+<details>
+<summary><strong>A video downloads without audio, or the app reports that FFmpeg is required</strong></summary>
 
-## Giấy phép
+Some posts expose video and audio as separate streams. Install a recent FFmpeg build and make sure `ffmpeg` and `ffprobe` are available on `PATH`. If the executables are installed in a custom location, consult the app's settings or project configuration for the supported path override.
 
-**Dự án chưa chọn giấy phép.** Kho mã nguồn không kèm tệp `LICENSE` và không có
-trường giấy phép trong `package.json` hay `Cargo.toml`. Theo mặc định của luật
-bản quyền, điều đó có nghĩa là **mọi quyền được bảo lưu** — bạn có thể đọc mã
-nguồn, nhưng chưa có giấy phép nào cho phép sử dụng, sao chép, sửa đổi hay phân
-phối lại. Nếu bạn muốn dự án có giấy phép nguồn mở, hãy thêm giấy phép một cách
-có chủ đích; tệp này không tự ý chọn thay bạn.
+</details>
+
+<details>
+<summary><strong>A profile or post cannot be loaded</strong></summary>
+
+Only content the app can legitimately access is supported. Some pages may be unavailable, region-restricted, require an existing user session, or change their response format. Check the URL and network connection first. Browser-assisted resolution and profile-session options are configurable; they do not bypass access controls or guarantee that every post can be retrieved.
+
+</details>
+
+<details>
+<summary><strong>A downloaded file is shown as missing or unavailable</strong></summary>
+
+The Library distinguishes a file that is confirmed missing from a file whose presence cannot be checked—for example, when an external drive is disconnected or a path is temporarily inaccessible. Reconnect the relevant drive or restore access to the configured directory, then refresh the file status.
+
+</details>
+
+<details>
+<summary><strong>The Windows build fails</strong></summary>
+
+Confirm that the MSVC C++ build tools, Windows SDK, Rust MSVC toolchain, Node.js, and WebView2 Runtime are installed. Re-run `npm ci` from `code` if frontend dependencies are missing, and review the first compiler error rather than deleting build files indiscriminately.
+
+</details>
+
+## Data and privacy
+
+- **Local library:** Library records, history, settings, and downloaded files are stored on the local machine.
+- **Network activity:** Loading posts and downloading media requires requests to Douyin and relevant media hosts.
+- **Browser-assisted features:** If enabled and used, browser-based resolution or a profile session may open an app-managed browser context. Review the settings before enabling these options.
+- **No promise of universal availability:** The application cannot guarantee that a URL, profile, media variant, or source host will remain accessible.
+
+Do not share your application data directory, browser profile, logs, or database publicly without reviewing them for personal information first.
+
+## Responsible use
+
+Use Douyin Downloader only for content you are authorized to save. Respect creators' rights, Douyin's terms, and the laws that apply to you. The app is intended for publicly accessible content; it is not designed to bypass access controls, solve challenges, or retrieve private content.
+
+When a source legitimately provides an original media resource, the app may prefer that resource. It does **not** modify downloaded media to remove watermarks.
+
+## Contributing and reporting issues
+
+Bug reports should include the application version, Windows version, steps to reproduce, and a concise description of the expected and actual behavior. **Review logs and screenshots before attaching them**; remove usernames, local paths, session information, and other private data.
+
+Please do not include account credentials, cookies, browser profiles, private databases, or downloaded media in an issue report.
+
+## License
+
+**No license has been selected for this repository yet.** There is currently no `LICENSE` file. Until a license is added, this project should not be assumed to grant permission to use, modify, or redistribute the source code.
+
+---
+
+<div align="center">
+
+Made for managing publicly accessible Douyin media on Windows.
+
+</div>
